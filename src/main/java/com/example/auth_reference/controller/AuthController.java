@@ -1,6 +1,8 @@
 package com.example.auth_reference.controller;
 
+import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.security.JwtService;
+import com.example.auth_reference.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    @Autowired
+    UserService userService;
 
     private final JwtService jwtService;
 
@@ -34,5 +39,10 @@ public class AuthController {
                 "username", authentication.getPrincipal(),
                 "roles", authentication.getAuthorities()
         );
+    }
+
+    @PostMapping("/register")
+    public UserInfo register(@RequestParam String username, @RequestParam String password) {
+        return userService.register(username, password);
     }
 }
