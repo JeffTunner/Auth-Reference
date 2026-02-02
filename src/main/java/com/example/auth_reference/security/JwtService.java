@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class JwtService {
@@ -15,10 +16,10 @@ public class JwtService {
 
     private static final long EXPIRATION = 1000 * 60 * 60; // 1 hour
 
-    public String generateToken(AuthUser user) {
+    public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
-                .setSubject(user.username())
-                .claim("roles", user.roles())
+                .setSubject(username)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION))
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
