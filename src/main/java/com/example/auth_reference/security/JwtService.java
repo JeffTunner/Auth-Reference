@@ -33,4 +33,9 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public List<String> extractRoles(String token) {
+        Claims claims = extractClaims(token);
+        return claims.get("roles", List.class);
+    }
 }
