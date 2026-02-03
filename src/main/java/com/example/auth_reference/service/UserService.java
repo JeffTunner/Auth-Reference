@@ -28,6 +28,7 @@ public class UserService {
         UserInfo user = new UserInfo();
         user.setUsername(username);
         user.setPassword(hashedPassword);
+        user.setRoles(List.of("ROLE_USER"));
         return userRepository.save(user);
     }
 
@@ -37,11 +38,10 @@ public class UserService {
             throw new NullPointerException("User not found!");
         }
         if(passwordEncoder.matches(password, user.getPassword())) {
-            List<String> roles = List.of("ROLE_USER");
-            String token = jwtService.generateToken(username, roles);
+            String token = jwtService.generateToken(user.getUsername(), user.getRoles());
             return Map.of("token", token);
         } else {
-            throw new IllegalStateException("Password doesnt match");
+            throw new IllegalStateException("Invalid Credentials");
         }
     }
 }
