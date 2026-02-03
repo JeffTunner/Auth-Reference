@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -19,5 +21,7 @@ public class UserInfo {
 
     private String username;
     private String password;
-    private String role;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<String> roles;
 }
