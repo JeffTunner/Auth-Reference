@@ -26,10 +26,8 @@ public class AuthController {
 
     //LOGIN (Generate Token)
     @PostMapping("/login")
-    public Map<String, String> login(@RequestParam String username) {
-        List<String> roles = List.of("ROLE_USER");
-        String token = jwtService.generateToken(username, roles);
-        return Map.of("token", token);
+    public Map<String, String> login(@RequestParam String username, @RequestParam String password) {
+        return userService.login(username, password);
     }
 
     //WHOAMI (Requires JWT)
