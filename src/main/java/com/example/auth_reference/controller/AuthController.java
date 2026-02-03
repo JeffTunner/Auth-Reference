@@ -4,6 +4,7 @@ import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.security.JwtService;
 import com.example.auth_reference.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,11 @@ public class AuthController {
     @PostMapping("/register")
     public UserInfo register(@RequestParam String username, @RequestParam String password) {
         return userService.register(username, password);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin")
+    public String admin() {
+        return "Admin access";
     }
 }

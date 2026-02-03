@@ -23,5 +23,5 @@ public class UserInfo {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    List<String> roles;
+    private List<String> roles;
 }
