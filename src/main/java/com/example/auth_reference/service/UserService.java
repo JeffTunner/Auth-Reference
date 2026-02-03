@@ -1,5 +1,7 @@
 package com.example.auth_reference.service;
 
+import com.example.auth_reference.dto.LoginRequestDto;
+import com.example.auth_reference.dto.RegisterRequestDto;
 import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.repository.UserRepository;
 import com.example.auth_reference.security.JwtService;
@@ -23,21 +25,25 @@ public class UserService {
     @Autowired
     JwtService jwtService;
 
-    public UserInfo register(String username, String password) {
-        String hashedPassword = passwordEncoder.encode(password);
+    public UserInfo register(RegisterRequestDto requestDto) {
+        if(userRepository.existsByUsername(requestDto.username())) {
+            throw new IllegalStateException("Username Already Exists!");
+        }
+        String hashedPassword = passwordEncoder.encode(requestDto.password());
         UserInfo user = new UserInfo();
-        user.setUsername(username);
+        user.setUsername(requestDto.username());
         user.setPassword(hashedPassword);
-        user.setRoles(List.of("ROLE_USER"));
+        List<String > roles = (requestDto.roles() == null || requestDto.roles().isEmpty()) ? List.of("ROLE_USER") : requestDto.roles();
+        user.setRoles(roles);
         return userRepository.save(user);
     }
 
-    public Map<String, String> login(String username, String password) {
-        UserInfo user = userRepository.findByUsername(username);
+    public Map<String, String> login(LoginRequestDto dto) {
+        UserInfo user = userRepository.findByUsername(dto.username());
         if(user == null) {
-            throw new NullPointerException("User not found!");
+            throw new IllegalStateException("Invalid Credentials");
         }
-        if(passwordEncoder.matches(password, user.getPassword())) {
+        if(passwordEncoder.matches(dto.password(), user.getPassword())) {
             String token = jwtService.generateToken(user.getUsername(), user.getRoles());
             return Map.of("token", token);
         } else {
