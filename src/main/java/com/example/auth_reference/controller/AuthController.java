@@ -1,8 +1,11 @@
 package com.example.auth_reference.controller;
 
+import com.example.auth_reference.dto.LoginRequestDto;
+import com.example.auth_reference.dto.RegisterRequestDto;
 import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.security.JwtService;
 import com.example.auth_reference.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -27,8 +30,8 @@ public class AuthController {
 
     //LOGIN (Generate Token)
     @PostMapping("/login")
-    public Map<String, String> login(@RequestParam String username, @RequestParam String password) {
-        return userService.login(username, password);
+    public Map<String, String> login(@RequestBody @Valid LoginRequestDto dto) {
+        return userService.login(dto);
     }
 
     //WHOAMI (Requires JWT)
@@ -41,8 +44,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserInfo register(@RequestParam String username, @RequestParam String password) {
-        return userService.register(username, password);
+    public UserInfo register(@RequestBody @Valid RegisterRequestDto requestDto) {
+        return userService.register(requestDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
