@@ -38,4 +38,20 @@ public class JwtService {
         Claims claims = extractClaims(token);
         return claims.get("roles", List.class);
     }
+
+    public String extractUsername(String token) {
+        Claims claims = extractClaims(token);
+        return claims.getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Claims claims = extractClaims(token);
+
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
