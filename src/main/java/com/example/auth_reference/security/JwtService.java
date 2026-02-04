@@ -19,7 +19,7 @@ public class JwtService {
     public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roles)
+                .claim(SecurityConstants.ROLES_CLAIM, roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION))
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
@@ -36,7 +36,7 @@ public class JwtService {
 
     public List<String> extractRoles(String token) {
         Claims claims = extractClaims(token);
-        return claims.get("roles", List.class);
+        return claims.get(SecurityConstants.ROLES_CLAIM, List.class);
     }
 
     public String extractUsername(String token) {
