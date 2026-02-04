@@ -2,6 +2,7 @@ package com.example.auth_reference.service;
 
 import com.example.auth_reference.dto.LoginRequestDto;
 import com.example.auth_reference.dto.RegisterRequestDto;
+import com.example.auth_reference.dto.RegisterResponseDto;
 import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.repository.UserRepository;
 import com.example.auth_reference.security.JwtService;
@@ -25,7 +26,7 @@ public class UserService {
     @Autowired
     JwtService jwtService;
 
-    public UserInfo register(RegisterRequestDto requestDto) {
+    public RegisterResponseDto register(RegisterRequestDto requestDto) {
         if(userRepository.existsByUsername(requestDto.username())) {
             throw new IllegalStateException("Username Already Exists!");
         }
@@ -35,7 +36,8 @@ public class UserService {
         user.setPassword(hashedPassword);
         List<String > roles = (requestDto.roles() == null || requestDto.roles().isEmpty()) ? List.of("ROLE_USER") : requestDto.roles();
         user.setRoles(roles);
-        return userRepository.save(user);
+        UserInfo saved = userRepository.save(user);
+        return new RegisterResponseDto(saved.getUsername(), saved.getRoles());
     }
 
     public Map<String, String> login(LoginRequestDto dto) {

@@ -2,6 +2,7 @@ package com.example.auth_reference.controller;
 
 import com.example.auth_reference.dto.LoginRequestDto;
 import com.example.auth_reference.dto.RegisterRequestDto;
+import com.example.auth_reference.dto.RegisterResponseDto;
 import com.example.auth_reference.entity.UserInfo;
 import com.example.auth_reference.security.JwtService;
 import com.example.auth_reference.service.UserService;
@@ -44,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserInfo register(@RequestBody @Valid RegisterRequestDto requestDto) {
+    public RegisterResponseDto register(@RequestBody @Valid RegisterRequestDto requestDto) {
         return userService.register(requestDto);
     }
 
